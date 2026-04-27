@@ -1,33 +1,18 @@
 import xmlrpc.client
-from typing import List, Dict, Any
-from src.config import settings
+import os
 
 class OdooClient:
-    """Senior-level XML-RPC Client with authenticated session handling."""
-    
     def __init__(self):
-        self.url = settings.ODOO_URL
-        self.db = settings.ODOO_DB
-        self.username = settings.ODOO_USER
-        self.password = settings.ODOO_PASSWORD
-        self._uid = None
+        self.url = os.getenv("ODOO_URL")
+        self.db = os.getenv("ODOO_DB")
+        self.username = os.getenv("ODOO_EMAIL")
+        self.password = os.getenv("ODOO_API_KEY")
+        self.common = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/common")
+        self.uid = self.common.authenticate(self.db, self.username, self.password, {})
+        self.models = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/object")
 
-    @property
-    def uid(self):
-        if not self._uid:
-            try:
-                common = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/common")
-                self._uid = common.authenticate(self.db, self.username, self.password, {})
-            except Exception as e:
-                print(f"Failed to authenticate with Odoo: {e}")
-                return None
-        return self._uid
+    def execute_kw(self, model, method, args, kwargs=None):
+        kwargs = kwargs or {}
+        return self.models.execute_kw(self.db, self.uid, self.password, model, method, args, kwargs)
 
-    def search_read(self, model: str, domain: List, fields: List) -> List[Dict[str, Any]]:
-        if not self.uid:
-            return []
-        models = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/object")
-        return models.execute_kw(
-            self.db, self.uid, self.password,
-            model, 'search_read', [domain], {'fields': fields}
-        )
+odoo_client = OdooClient()
