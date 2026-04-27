@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: deploy/docker/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: ankane/pgvector:v0.5.1
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ai_admin
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: rag_knowledge_base
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_admin -d rag_knowledge_base"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
