@@ -8,3 +8,8 @@ venv/
 _fix_email_build/
 _new_commits/
 _odoo_rag_build/
+.vercel
+.env*.local
+__pycache__/
+*.pyc
+.env
