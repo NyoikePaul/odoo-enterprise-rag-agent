@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+app = FastAPI(title="Odoo Enterprise RAG Agent", description="AI-driven assistant for automated Odoo ticket resolution and ERP data retrieval.", version="1.0.0", docs_url="/docs", redoc_url="/redoc")
 
 
 from fastapi.responses import FileResponse
