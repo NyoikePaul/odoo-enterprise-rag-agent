@@ -19,3 +19,6 @@ graph TD
 - Python 3.10+
 - PostgreSQL with pgvector
 - Odoo 16.0+ (Enterprise or Community)
+
+<img width="1366" height="684" alt="image" src="https://github.com/user-attachments/assets/375f7eef-6536-445b-b0ee-1f8e39fafb41" />
+
