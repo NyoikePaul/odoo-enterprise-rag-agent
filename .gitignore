@@ -5,3 +5,6 @@ __pycache__/
 .idea/
 node_modules/
 venv/
+_fix_email_build/
+_new_commits/
+_odoo_rag_build/
